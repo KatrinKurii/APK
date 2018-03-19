@@ -1,0 +1,6 @@
+<urls>
+    <item name="ICTV">./Channels/ictv.html</item>
+    <item name="1+1">./Channels/1plus1.html</item>
+    <item name="Новий канал">./Channels/novy.html</item>
+    <item name="Інтер">./Channels/inter.html</item>
+</urls>
