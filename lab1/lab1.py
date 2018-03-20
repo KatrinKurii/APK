@@ -1,22 +1,16 @@
 from xml.dom.minidom import parse
 
-class TimeTable:
-    def __init__(self, path_html):
-        htmldoc = parse(path_html)
-        self.timetable = []
-        for program in htmldoc.getElementsByTagName('tr'):
-            prog = []
-            for td in program.getElementsByTagName('td'):
-                prog.append(td.childNodes[0].data)
-                
-            if (prog):
-                self.timetable.append(prog)
-        
-        print(self.timetable)
-        htmldoc.unlink()
+def get_timetable(path_html):
+    htmldoc = parse(path_html)
+    timetable = []
 
-    def get_timetable(self):
-        return self.timetable
+    for tr in htmldoc.getElementsByTagName('tr'):
+        program = [td.childNodes[0].data for td in tr.getElementsByTagName('td')]
+        if (program):
+            timetable.append(program)
+    
+    htmldoc.unlink()
+    return timetable
 
 def get_files(path_xml):
     xmldoc = parse(path_xml)
@@ -25,9 +19,33 @@ def get_files(path_xml):
     xmldoc.unlink()
     return files
 
+def printProgram(program):
+    print(program[0] + ' - ' + program[1] + ' (' + program[2] + ')')
+
+def printChannel(channel):
+    print(channel[0])
+    for program in channel[1]:
+        print('   ', end = '')
+        printProgram(program)
+
+def filterDate(timetable, start, end):
+    filtered = timetable
+    return filtered
+
+def filterType(timetable, type):
+    filtered = timetable
+    return filtered
+
+def filter(timetable, date_start, date_end, type_str):
+    filtered = filterDate(timetable, date_start, date_end)
+    filtered = filterType(filtered, type_str)
+    return filtered
+
 if __name__ == '__main__':
     channels = get_files('channels.xml')
-    timetables = [(channel[1], TimeTable(channel[0]).get_timetable()) for channel in channels]
+    timetables = [(channel[1], get_timetable(channel[0])) for channel in channels]
     
-    for channel in timetables:
-        print(channel)
+    for i, channel in enumerate(timetables):
+        print(str(i + 1) + '. ', end = '')
+        printChannel(channel)
+        print()
