@@ -1,4 +1,5 @@
 from xml.dom.minidom import parse
+from datetime import datetime
 
 def get_timetable(path_html):
     htmldoc = parse(path_html)
@@ -29,11 +30,22 @@ def printChannel(channel):
         printProgram(program)
 
 def filterDate(timetable, start, end):
-    filtered = timetable
+    filtered = []
+    datetime_start = datetime.strptime(start, '%d.%m.%Y %H:%M')
+    datetime_end = datetime.strptime(end, '%d.%m.%Y %H:%M')
+    for program in timetable:
+        datetime_current = datetime.strptime(program[0], '%d.%m.%Y %H:%M')
+        if ((datetime_current >= datetime_start) and (datetime_current <= datetime_end)):
+            filtered.append(program)
+
     return filtered
 
 def filterType(timetable, type):
-    filtered = timetable
+    filtered = []
+    for program in timetable:
+        if (program[2] == type):
+            filtered.append(program)
+
     return filtered
 
 def filter(timetable, date_start, date_end, type_str):
@@ -44,8 +56,10 @@ def filter(timetable, date_start, date_end, type_str):
 if __name__ == '__main__':
     channels = get_files('channels.xml')
     timetables = [(channel[1], get_timetable(channel[0])) for channel in channels]
-    
-    for i, channel in enumerate(timetables):
-        print(str(i + 1) + '. ', end = '')
-        printChannel(channel)
-        print()
+    filtered_timetable = [[timetable[0], filter(timetable[1], '19.03.2018 06:29', '22.03.2018 10:29', 'Серіали')] for timetable in timetables]
+
+    for i, channel in enumerate(filtered_timetable):
+        if channel[1]:
+            print(str(i + 1) + '. ', end = '')
+            printChannel(channel)
+            print()
