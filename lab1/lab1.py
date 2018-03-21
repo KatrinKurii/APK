@@ -1,6 +1,7 @@
-from xml.dom.minidom import parse
+from xml.dom.minidom import parse, parseString
 from datetime import datetime
 import sys
+import xml.etree.ElementTree as ET
 
 program_type_all = 'Всі'
 program_type_default = 'Серіали'
@@ -28,12 +29,6 @@ def get_timetable(path_html):
     return timetable
 
 
-def printChannel(channel):
-    print(channel[0])
-    for prog in channel[1]:
-        print('   ' + prog[0] + ' - ' + prog[1] + ' (' + prog[2] + ')')
-
-
 def filterDate(timetable, start, end):
     filtered = []
     for program in timetable:
@@ -59,6 +54,26 @@ def filter(timetable, date_start, date_end, type_str):
         filtered = filterType(filtered, type_str)
 
     return filtered
+
+
+def createXML(timetables):
+    channels = ET.Element('channels')
+    for ch in timetables:
+        if ch[1]:
+            channel = ET.SubElement(channels, 'channel')
+            for pr in ch[1]:
+                program = ET.SubElement(channel, 'program')
+                date = ET.SubElement(program, 'date')
+                name = ET.SubElement(program, 'name')
+                type = ET.SubElement(program, 'type')
+
+                date.text = pr[0]
+                name.text = pr[1]
+                type.text = pr[2]
+
+    xmlstr = parseString(ET.tostring(channels)).toprettyxml(indent="   ")
+    with open("output.xml", "w") as f:
+        f.write(xmlstr)
 
 
 if __name__ == '__main__':
@@ -93,14 +108,4 @@ if __name__ == '__main__':
                                   program_type)
         filtered_timetables.append((timetable[0], filtered_channel))
 
-    i = 0
-    print('Результат пошуку:')
-    for channel in filtered_timetables:
-        if channel[1]:
-            i += 1
-            print(str(i) + '. ', end='')
-            printChannel(channel)
-            print()
-
-    if i == 0:
-        print('    ** None **')
+    createXML(filtered_timetables)
