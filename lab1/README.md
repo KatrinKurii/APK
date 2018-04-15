@@ -7,14 +7,17 @@
 ## Coverage тести
 ```
 coverage erase
-coverage run -a lab1.py "19.03.2018 08:00" "21.03.2018 10:00" "Всі"
-coverage run -a lab1.py "19.03.2018 08:00" "20.03.2018 08:00" ""
-coverage run -a lab1.py "19.03.2018 08:00" "20.03.2018 08:00" "Невідомий"
-coverage run -a lab1.py "19.03.20 08:00" "24.03.2018 08:00" "Новини"
-coverage run -a lab1.py "19.03.2018 08:00" "20.03.20 08:00" "Фільми"
+coverage run -a main.py "29.03.2018 08:00" "31.03.2018 15:00" "Всі"
+coverage run -a main.py "20.03.2018 07:00" "21.03.2018 08:00" "М/с"
+coverage run -a main.py "01.04.2018 06:20" "01.03.2018 18:00"
+coverage run -a main.py "41.04.2018 06:20" "01.03.2018 18:00"
+coverage run -a main.py "01.04.2018 06:20" "01.0.2018 18:00"
+coverage run -a main.py "01.04.2018 06:20" "01.04.2018 08:00"
+coverage run -a main.py "01.04.2018 06:20"
+coverage run -a main.py
 coverage report -m
 
 Name      Stmts   Miss  Cover   Missing
 ---------------------------------------
-lab1.py      75      0   100%
+main.py     116      1    99%   150
 ```
